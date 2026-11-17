@@ -1,0 +1,26 @@
+spring:
+  application:
+    name: v
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://${DB_HOSTNAME}:${DB_PORT}/${DB_DATABASE}?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Seoul&autoReconnect=true
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
+  hikari:
+    maximum-pool-size: 10
+    minimum-idle: 10
+    idle-timeout: 600000
+    connection-timeout: 30000
+
+server:
+  port: 8000
+  address: 0.0.0.0
+
+springdoc:
+  default-consumes-media-type: application/json
+  default-produces-media-type: application/json
+  swagger-ui:
+    tags-sorter: alpha
+mybatis:
+  config-location: classpath:ibatis-config.xml
+  mapper-locations: classpath:mapper/**/*.xml

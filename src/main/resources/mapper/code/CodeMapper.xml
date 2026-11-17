@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.iung.dev.domain.code.mapper.CodeMapper">
+    <sql id="selectQuery">
+        SELECT
+            tcc.*
+        FROM T_COMMON_CODE tcc
+    </sql>
+
+    <sql id="selectWhere">
+        <where>
+            <if test="code.codeGroup != null"> AND tcc.CODE_GROUP = #{code.codeGroup}</if>
+            <if test="code.code != null"> AND tcc.CODE = #{code.code}</if>
+            <if test="code.codeNm != null"> AND tcc.CODE_NM LIKE CONCAT('%', #{code.codeNm}, '%')</if>
+            <if test="code.codeDesc != null"> AND tcc.CODE_DESC LIKE CONCAT('%', #{code.codeDesc}, '%')</if>
+            <if test="code.sortOrd != null"> AND tcc.SORT_ORD = #{code.sortOrd}</if>
+            <if test="code.defaultYn != null"> AND tcc.DEFAULT_YN = #{code.defaultYn}</if>
+            <if test="code.subCodeGroup != null"> AND tcc.SUB_CODE_GROUP = #{code.subCodeGroup}</if>
+            <if test="code.subCodeGroupNm != null"> AND tcc.SUB_CODE_GROUP_NM = #{code.subCodeGroupNm}</if>
+            <if test="code.useYn != null"> AND tcc.USE_YN = #{code.useYn}</if>
+            <if test="code.deleteYn != null"> AND tcc.DELETE_YN = #{code.deleteYn}</if>
+        </where>
+    </sql>
+
+    <select id="searchList" parameterType="SeacrhCodeDto" resultType="CodeDto">
+        <include refid="selectQuery" />
+        <include refid="selectWhere" />
+        ORDER BY
+        <choose>
+            <when test="pageable.sort.sorted">
+                <foreach item="order" collection="pageable.sort" separator=",">
+                    tcc.${order.property} ${order.direction}
+                </foreach>
+            </when>
+            <otherwise>
+                tcc.SORT_ORD, tcc.CODE_NM
+            </otherwise>
+        </choose>
+        LIMIT #{pageable.offset}, #{pageable.pageSize}
+    </select>
+
+    <select id="searchCount" parameterType="SeacrhCodeDto" resultType="int">
+        SELECT COUNT(*)
+        FROM T_COMMON_CODE tcc
+        <include refid="selectWhere" />
+    </select>
+
+    <select id="findByGroupAndCode" parameterType="string" resultType="CodeDto">
+        <include refid="selectQuery" />
+        WHERE tcc.CODE_GROUP = #{groupCode} AND CODE = #{code}
+    </select>
+
+    <select id="findByGroupCode" parameterType="string" resultType="CodeDto">
+        <include refid="selectQuery" />
+        WHERE tcc.CODE_GROUP = #{groupCode}
+    </select>
+
+</mapper>

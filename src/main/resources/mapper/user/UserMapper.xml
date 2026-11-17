@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.iung.dev.domain.user.mapper.UserMapper">
+
+    <sql id="findAll">
+        SELECT LOWER(tmm.MEMBER_ID) AS MEMBER_ID,
+               tmm.USERNAME,
+               tmm.TELNO,
+               tmm.EMAIL,
+               tmm.SEX,
+               FN_CODE_NM('SEX', tmm.SEX)                 AS SEX_NM,
+               tmm.REMARK,
+               tmm.USE_YN,
+               tmm.DELETE_YN,
+               tmm.WITHDRAW_YN,
+               tmm.FAILED_COUNT,
+               tmm.CREATED_TIME,
+               tmm.MODIFIED_TIME
+        FROM T_MEMBER_MST AS tmm
+    </sql>
+
+
+    <sql id="findAllWhere">
+        <where>
+            <if test="user.memberId != null and user.memberId != ''">
+                AND LOWER(tmm.MEMBER_ID) LIKE CONCAT('%', LOWER(#{user.memberId}), '%')
+            </if>
+            <if test="user.username != null and user.username != ''">
+                AND tmm.USERNAME LIKE CONCAT('%', #{user.hdofNm}, '%')
+            </if>
+            <if test="user.telno != null and user.telno != ''">
+                AND tmm.TELNO LIKE CONCAT('%', #{user.telno}, '%')
+            </if>
+            <if test="user.email != null and user.email != ''">
+                AND tmm.EMAIL LIKE CONCAT('%', #{user.email}, '%')
+            </if>
+            <if test="user.remark != null and user.remark != ''">
+                AND LOWER(tmm.REMARK) LIKE CONCAT('%', LOWER(#{user.remark}), '%')
+            </if>
+            <if test="user.useYn != null and user.useYn != ''">
+                AND tmm.USE_YN = #{user.useYn}
+            </if>
+            <if test="user.deleteYn != null and user.deleteYn != ''">
+                AND tmm.DELETE_YN = #{user.deleteYn}
+            </if>
+            <if test="user.withdrawYn != null and user.withdrawYn != ''">
+                AND tmm.WITHDRAW_YN = #{user.withdrawYn}
+            </if>
+        </where>
+    </sql>
+
+
+    <select id="searchList" parameterType="SearchUserDto"
+            resultType="UserDto">
+        <include refid="findAll" />
+        <include refid="findAllWhere"/>
+        ORDER BY
+        <choose>
+            <when test="pageable.sort.sorted">
+                <foreach item="order" collection="pageable.sort" separator=",">
+                    tmm.${order.property} ${order.direction}
+                </foreach>
+            </when>
+            <otherwise>
+                tmm.USERNAME ASC
+            </otherwise>
+        </choose>
+        LIMIT #{pageable.offset}, #{pageable.pageSize}
+    </select>
+
+    <select id="searchCount" parameterType="SearchUserDto" resultType="int">
+        SELECT COUNT(*)
+        FROM T_MEMBER_MST tmm
+        <include refid="findAllWhere"/>
+    </select>
+
+    
+    <select id="findById" parameterType="string" resultType="UserDto">
+        <include refid="findAll" />
+        <where>
+            LOWER(tmm.MEMBER_ID) = LOWER(#{memberId})
+        </where>
+
+    </select>
+
+
+    <select id="checkMemberIdExists" parameterType="string" resultType="int">
+        SELECT COUNT(*)
+        FROM T_MEMBER_MST
+        WHERE LOWER(MEMBER_ID) = LOWER(#{memberId})
+    </select>
+
+    <insert id="register" parameterType="RegistUserDto">
+        INSERT INTO T_MEMBER_MST (MEMBER_ID, MEMBER_PW, USERNAME, TELNO, EMAIL, SEX, REMARK, CREATED_TIME, MODIFIED_TIME)
+        VALUES (#{user.memberId}, #{user.memberPw}, #{user.username}, #{user.telno}, #{user.email}, #{user.sex}, #{user.remark}, now(), now())
+    </insert>
+
+
+    <update id="update" parameterType="ModifyUserDto">
+        UPDATE T_MEMBER_MST
+        <set>
+            <if test="user.username != null and user.username != ''">USERNAME = #{user.username},</if>
+            <if test="user.telno != null and user.telno != ''">TELNO = #{user.telno},</if>
+            <if test="user.email != null and user.email != ''">EMAIL = #{user.email},</if>
+            <if test="user.sex != null and user.sex != ''">SEX = #{user.sex},</if>
+            <if test="user.remark != null and user.remark != ''">REMARK = #{user.remark},</if>
+            <if test="user.useYn != null and user.useYn != ''">USE_YN = #{user.useYn},</if>
+            <if test="user.deleteYn != null and user.deleteYn != ''">DELETE_YN = #{user.deleteYn},</if>
+            MODIFIED_TIME = now()
+        </set>
+        <where>
+            LOWER(MEMBER_ID)=LOWER(#{memberId})
+        </where>
+    </update>
+
+    <update id="incrementFailedCount" parameterType="string">
+        UPDATE T_MEMBER_MST
+        SET FAILED_COUNT = FAILED_COUNT + 1,
+        LOCK_YN = CASE WHEN FAILED_COUNT + 1 >= 5 THEN 'Y' ELSE LOCK_YN END
+        WHERE LOWER(MEMBER_ID) = LOWER(#{memberId})
+    </update>
+
+
+    <select id="findPwd" parameterType="string" resultType="string">
+        SELECT MEMBER_PW
+        FROM T_MEMBER_MST
+        WHERE LOWER(MEMBER_ID) = LOWER(#{memberId})
+    </select>
+</mapper>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+    <settings>
+        <setting name="cacheEnabled" value="true"/>
+        <setting name="lazyLoadingEnabled" value="false"/>
+        <setting name="multipleResultSetsEnabled" value="true"/>
+        <setting name="useColumnLabel" value="true"/>
+        <setting name="defaultExecutorType" value="SIMPLE"/>
+        <setting name="jdbcTypeForNull" value="NULL"/>
+        <setting name="callSettersOnNulls" value="false"/>
+        <setting name="useGeneratedKeys" value="true"/>
+        <setting name="autoMappingBehavior" value="PARTIAL"/>
+        <setting name="autoMappingUnknownColumnBehavior" value="WARNING"/>
+        <setting name="logImpl" value="SLF4J"/>
+        <setting name="mapUnderscoreToCamelCase" value="true"/>
+    </settings>
+
+    <typeAliases>
+        <typeAlias alias="UserDto" type="com.iung.dev.domain.user.model.UserDto"/>
+        <typeAlias alias="RegistUserDto" type="com.iung.dev.domain.user.model.RegistUserDto"/>
+        <typeAlias alias="SearchUserDto" type="com.iung.dev.domain.user.model.SearchUserDto"/>
+        <typeAlias alias="ModifyUserDto" type="com.iung.dev.domain.user.model.ModifyUserDto"/>
+        <typeAlias alias="CodeDto" type="com.iung.dev.domain.code.model.CodeDto"/>
+        <typeAlias alias="SeacrhCodeDto" type="com.iung.dev.domain.code.model.SeacrhCodeDto"/>
+    </typeAliases>
+
+</configuration>
