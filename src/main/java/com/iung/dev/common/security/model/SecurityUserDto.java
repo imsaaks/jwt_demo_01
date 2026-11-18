@@ -1,25 +1,27 @@
-package com.iung.dev.common.model;
+package com.iung.dev.common.security.model;
 
 import com.iung.dev.domain.user.model.UserDto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.Delegate;
-import lombok.extern.slf4j.Slf4j;
 import org.jspecify.annotations.Nullable;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Slf4j
 @Getter
+@Setter
 @AllArgsConstructor
-public class SecurityUserDetailsDto implements UserDetails  {
+public class SecurityUserDto implements UserDetails {
+
 
     @Delegate
     private UserDto userDto;
@@ -60,4 +62,5 @@ public class SecurityUserDetailsDto implements UserDetails  {
     public  boolean isEnabled() {
         return false;
     }
+
 }

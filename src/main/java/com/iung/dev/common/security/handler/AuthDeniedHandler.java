@@ -1,5 +1,7 @@
 package com.iung.dev.common.security.handler;
 
+import com.iung.dev.common.security.exception.AccessPreventionCodes;
+
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.json.JSONObject;
@@ -28,7 +30,7 @@ public class AuthDeniedHandler implements AccessDeniedHandler {
         try (PrintWriter writer = response.getWriter()){
             HashMap<String, Object> resultMap = new HashMap<>();
             resultMap.put("userInfo", null);
-            resultMap.put("resultCode", 9999);
+            resultMap.put("resultCode", AccessPreventionCodes.DEFAULT_PREVENTION_CODE.getCode());
             resultMap.put("failMessage", "접근 권한이 없습니다.");
             writer.print(new JSONObject(resultMap));
             writer.flush();

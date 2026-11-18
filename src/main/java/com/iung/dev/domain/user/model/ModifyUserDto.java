@@ -43,6 +43,10 @@ public class ModifyUserDto {
     @Schema(description = "삭제여부")
     protected String deleteYn;
 
+    @Parameter(description = "탈퇴여부")
+    @Schema(description = "탈퇴여부")
+    protected String withdrawYn;
+
     @Parameter(description = "계정잠금여부")
     @Schema(description = "계정잠금여부")
     protected String lockYn;

@@ -17,6 +17,7 @@
                tmm.DELETE_YN,
                tmm.WITHDRAW_YN,
                tmm.FAILED_COUNT,
+               tmm.LOCK_YN,
                tmm.CREATED_TIME,
                tmm.MODIFIED_TIME
         FROM T_MEMBER_MST AS tmm
@@ -109,6 +110,8 @@
             <if test="user.remark != null and user.remark != ''">REMARK = #{user.remark},</if>
             <if test="user.useYn != null and user.useYn != ''">USE_YN = #{user.useYn},</if>
             <if test="user.deleteYn != null and user.deleteYn != ''">DELETE_YN = #{user.deleteYn},</if>
+            <if test="user.withdrawYn != null and user.withdrawYn != ''">WITHDRAW_YN = #{user.withdrawYn},</if>
+            <if test="user.lockYn != null and user.lockYn != ''">LOCK_YN = #{user.lockYn},</if>
             MODIFIED_TIME = now()
         </set>
         <where>

@@ -8,6 +8,8 @@ import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -112,6 +114,15 @@ public class TokenUtils {
         return Arrays.asList(getClaimsFormToken(token).get(ROLES).toString().split(","));
     }
 
+
+    public static void deleteToken(HttpServletResponse response) {
+        // JWT 토큰을 저장하는 쿠키의 값을 삭제
+        Cookie jwtCookie = new Cookie(AppConstants.ACCESS_TOKEN, null);
+        jwtCookie.setMaxAge(0);
+        jwtCookie.setPath("/");
+        response.addCookie(jwtCookie);
+    }
+
     private static Date createAccessTokenExpiredDate() {
         Instant instant = Instant.now();
         Instant expireInstant = instant.plus(Duration.ofHours(AppConstants.TOKEN_EXPIRATION_HOUR));
@@ -127,7 +138,7 @@ public class TokenUtils {
     private static Map<String, Object> createClaims(UserDto userDto) {
         Map<String, Object> map = new HashMap<>();
         map.put(LOGIN_ID, userDto.getMemberId());
-        map.put(ROLES, "");
+        map.put(ROLES, "MEMBER");
         map.put(USERNAME, userDto.getUsername());
         return map;
     }

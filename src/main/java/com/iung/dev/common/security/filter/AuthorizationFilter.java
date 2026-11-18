@@ -2,8 +2,8 @@ package com.iung.dev.common.security.filter;
 
 import com.iung.dev.common.constants.AppConstants;
 import com.iung.dev.common.config.SecurityConfig;
-import com.iung.dev.common.model.SecurityUserDetailsDto;
 import com.iung.dev.common.security.service.AuthUserService;
+import com.iung.dev.common.security.model.SecurityUserDto;
 import com.iung.dev.common.exception.code.GlobalErrorCodes;
 import com.iung.dev.common.utils.TokenUtils;
 
@@ -116,11 +116,11 @@ public class AuthorizationFilter extends OncePerRequestFilter {
 
             List<String> authorities = TokenUtils.getAuthoritiesFromToken(token);
             String userName = TokenUtils.getUserNameFromToken(token);
-            SecurityUserDetailsDto securityUserDetailsDto = (SecurityUserDetailsDto) authUserService.loadUserById(loginId);
+            SecurityUserDto securityUserDto = (SecurityUserDto) authUserService.loadUserById(loginId);
             List<GrantedAuthority> grantedAuthorities = authorities.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList());
 
             AuthenticationToken authentication =
-                    new AuthenticationToken(securityUserDetailsDto, userName, grantedAuthorities);
+                    new AuthenticationToken(securityUserDto, userName, grantedAuthorities);
             SecurityContextHolder.getContext().setAuthentication(authentication);
         } else {
             throw new com.iung.dev.common.exception.AuthenticationException(GlobalErrorCodes.INVALID_TOKEN_CODE, "유효하지 않은 Token 입니다.");
@@ -130,14 +130,15 @@ public class AuthorizationFilter extends OncePerRequestFilter {
     private Map<String, Object> jsonResponseWrapper(Exception e) {
         String resultMessage;
 
+
         if (e instanceof ExpiredJwtException) {
-            resultMessage = "Token 기간 만료";
+            resultMessage = "토큰 기간 만료";
         } else if (e instanceof SecurityException) {
-            resultMessage = "허용된 Token이 아닙니다.";
+            resultMessage = "허용된 토큰이 아닙니다.";
         } else if (e instanceof JwtException) {
-            resultMessage = "Token을 parsing 하던 중 예외가 발생했습니다.";
+            resultMessage = "토큰을 parsing 하던 중 예외가 발생했습니다.";
         } else {
-            resultMessage = "Token 에러입니다.";
+            resultMessage = "토큰 에러입니다.";
         }
         Map<String, Object> jsonMap = new HashMap<>();
         jsonMap.put("status", 401);

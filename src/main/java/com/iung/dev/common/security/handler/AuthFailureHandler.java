@@ -1,7 +1,9 @@
 package com.iung.dev.common.security.handler;
 
+import com.iung.dev.common.utils.TokenUtils;
 import com.iung.dev.domain.user.service.UserService;
-import jakarta.servlet.ServletException;
+import com.iung.dev.common.security.exception.AccessPreventionCodes;
+
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -30,7 +32,9 @@ public class AuthFailureHandler implements AuthenticationFailureHandler {
     @Override
     public 	void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
                                            AuthenticationException exception) throws IOException {
-        //
+        // 토큰 삭제
+        TokenUtils.deleteToken(response);
+
         response.setCharacterEncoding(StandardCharsets.UTF_8.name());
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
@@ -38,7 +42,7 @@ public class AuthFailureHandler implements AuthenticationFailureHandler {
         try (PrintWriter printWriter = response.getWriter()) {
             HashMap<String, Object> resultMap = new HashMap<>();
             resultMap.put("userInfo", null);
-            resultMap.put("resultCode", 9999);
+            resultMap.put("resultCode", AccessPreventionCodes.ID_PWD_NOT_MATCH_CODE.getCode());
             resultMap.put("failMessage", "아이디 또는 비밀번호가 올바르지 않습니다. 입력한 정보를 다시 확인해 주세요.");
             printWriter.println(new JSONObject(resultMap));
             printWriter.close();

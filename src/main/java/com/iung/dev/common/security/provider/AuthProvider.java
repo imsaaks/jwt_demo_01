@@ -1,6 +1,6 @@
 package com.iung.dev.common.security.provider;
 
-import com.iung.dev.common.model.SecurityUserDetailsDto;
+import com.iung.dev.common.security.model.SecurityUserDto;
 import com.iung.dev.common.security.filter.AuthenticationToken;
 import com.iung.dev.domain.user.model.UserDto;
 import com.iung.dev.common.security.service.AuthUserService;
@@ -33,8 +33,8 @@ public class AuthProvider implements AuthenticationProvider {
             log.info("========A login fail!");
             throw new BadCredentialsException("Invalid username or password");
         }
-        SecurityUserDetailsDto securityUserDetailsDto = (SecurityUserDetailsDto) userDetailsService.loadUserByUsername(userId);
-        UserDto userDto = securityUserDetailsDto.getUserDto();
+        SecurityUserDto securityUserDto = (SecurityUserDto) userDetailsService.loadUserByUsername(userId);
+        UserDto userDto = securityUserDto.getUserDto();
 
 
         String pswd = userDetailsService.loadUserPwd(userDto.getMemberId());
@@ -46,11 +46,11 @@ public class AuthProvider implements AuthenticationProvider {
 
         if (StringUtils.isBlank(userPassword) || !isMatch) {
             // 로그인 실패시 로그인 실패 카운트 증감
-            userDetailsService.incrementFailedCount(securityUserDetailsDto.getUsername());
-            log.info("login fail! : {}", securityUserDetailsDto.getUsername() + " Invalid password");
-            throw new BadCredentialsException(securityUserDetailsDto.getUsername() + " Invalid password");
+            userDetailsService.incrementFailedCount(securityUserDto.getUsername());
+            log.info("login fail! : {}", securityUserDto.getUsername() + " Invalid password");
+            throw new BadCredentialsException(securityUserDto.getUsername() + " Invalid password");
         }
-        return new AuthenticationToken(securityUserDetailsDto, userPassword, securityUserDetailsDto.getAuthorities());
+        return new AuthenticationToken(securityUserDto, userPassword, securityUserDto.getAuthorities());
     }
 
     @Override
