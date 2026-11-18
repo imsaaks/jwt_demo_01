@@ -33,6 +33,9 @@ public class TokenUtils {
     public static final String ROLES="ROLES";
 
 
+    /**
+     * 토큰 생성
+     */
     public static String generateToken(UserDto userDto) {
         JwtBuilder builder = Jwts.builder()
                 .setId(UUID.randomUUID().toString())
@@ -60,7 +63,7 @@ public class TokenUtils {
     }
 
     /**
-     * 토큰 유효성 검증 Booleam
+     * 토큰 유효성 검증 Boolean
      */
     public static boolean validateToken(String token) {
         try {
@@ -93,7 +96,9 @@ public class TokenUtils {
         }
     }
 
-
+    /**
+     * HttpServletRequest Cookie 에서 토큰 추출
+     */
     public static String getTokenFromCookie(HttpServletRequest request) {
         Cookie[] cookies = request.getCookies();
         return Optional.ofNullable(cookies).flatMap(cs -> Arrays.stream(cs).filter(
@@ -114,7 +119,9 @@ public class TokenUtils {
         return Arrays.asList(getClaimsFormToken(token).get(ROLES).toString().split(","));
     }
 
-
+    /**
+     * 토큰 삭제
+     */
     public static void deleteToken(HttpServletResponse response) {
         // JWT 토큰을 저장하는 쿠키의 값을 삭제
         Cookie jwtCookie = new Cookie(AppConstants.ACCESS_TOKEN, null);
