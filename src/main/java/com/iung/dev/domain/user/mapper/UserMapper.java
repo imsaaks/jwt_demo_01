@@ -28,7 +28,7 @@ public interface UserMapper {
 
     int incrementFailedCount(@Param("memberId") String memberId);
 
-
+    int resetFailedCount(@Param("memberId") String memberId);
 
     String findPwd(@Param("memberId") String memberId);
 

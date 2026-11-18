@@ -1,8 +1,9 @@
 package com.iung.dev.common.security.service;
 
+import com.iung.dev.common.security.model.SecurityUserDto;
+import com.iung.dev.common.security.exception.AccessPreventionCodes;
 import com.iung.dev.domain.user.mapper.UserMapper;
 import com.iung.dev.domain.user.model.UserDto;
-import com.iung.dev.common.security.model.SecurityUserDto;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,7 +31,7 @@ public class AuthUserService implements UserDetailsService {
 
     @Transactional
     public UserDetails loadUserById(String memberId) throws UsernameNotFoundException {
-        UserDto userDto = userMapper.findById(memberId).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        UserDto userDto = userMapper.findById(memberId).orElseThrow(() -> new UsernameNotFoundException(AccessPreventionCodes.ID_NOT_MATCH_CODE.getCode()));
         return this.getSecurityUserDto(userDto);
     }
 
@@ -44,6 +45,13 @@ public class AuthUserService implements UserDetailsService {
     public int incrementFailedCount(String memberId) {
         return userMapper.incrementFailedCount(memberId);
     }
+
+
+    @Transactional
+    public int resetFailedCount(String memberId) {
+        return userMapper.resetFailedCount(memberId);
+    }
+
 
     private static SecurityUserDto getSecurityUserDto(UserDto user) {
         List<SimpleGrantedAuthority> authorities = new ArrayList<>();

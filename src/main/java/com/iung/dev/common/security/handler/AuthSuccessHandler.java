@@ -47,55 +47,23 @@ public class AuthSuccessHandler extends SavedRequestAwareAuthenticationSuccessHa
             HashMap<String, Object> resultMap = new HashMap<>();
             response.setCharacterEncoding(StandardCharsets.UTF_8.name());
             response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+            response.setStatus(HttpServletResponse.SC_OK);
+            resultMap.put("userInfo", userDtoObject);
+            resultMap.put("resultCode", AccessPreventionCodes.OK_CODE.getCode());
+            resultMap.put("failMessage", null);
 
-            if (userDto.getUseYn().equals("N")) {
-                response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-                resultMap.put("userInfo", null);
-                resultMap.put("resultCode", AccessPreventionCodes.USE_YN_N_CODE.getCode());
-                resultMap.put("failMessage", "사용이 불가능한 계정입니다.");
-            } else if (userDto.getDeleteYn().equals("Y")) {
-                response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-                resultMap.put("userInfo", null);
-                resultMap.put("resultCode", AccessPreventionCodes.DELETE_YN_Y_CODE.getCode());
-                resultMap.put("failMessage", "삭제된 계정입니다.");
-            } else if (userDto.getWithdrawYn().equals("Y")) {
-                response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-                resultMap.put("userInfo", null);
-                resultMap.put("resultCode", AccessPreventionCodes.WITHDRAW_YN_Y_CODE.getCode());
-                resultMap.put("failMessage", "탈퇴된 계정입니다.");
-
-            } else if (userDto.getLockYn().equals("Y")) {
-                response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-                resultMap.put("userInfo", null);
-                resultMap.put("resultCode", AccessPreventionCodes.LOCK_YN_Y_CODE.getCode());
-                resultMap.put("failMessage", "잠금된 계정입니다.");
-            } else {
-                response.setStatus(HttpServletResponse.SC_OK);
-                resultMap.put("userInfo", userDtoObject);
-                resultMap.put("resultCode", AccessPreventionCodes.OK_CODE.getCode());
-                resultMap.put("failMessage", null);
-
-                // JWT 토큰 생성
-
-                String acessToken = TokenUtils.generateToken(userDto);
-                // resultMap.put("acess_token", acessToken);
-                Cookie acessCookie = new Cookie(AppConstants.ACCESS_TOKEN, acessToken);
-                acessCookie.setHttpOnly(false);
-                acessCookie.setPath("/");
-                response.addCookie(acessCookie);
-            }
-
-            if (!resultMap.get("resultCode").equals(AccessPreventionCodes.OK_CODE.getCode())) {
-                // 토큰 삭제
-                TokenUtils.deleteToken(response);
-            }
+            // 토큰 생성
+            String acessToken = TokenUtils.generateToken(userDto);
+            Cookie acessCookie = new Cookie(AppConstants.ACCESS_TOKEN, acessToken);
+            acessCookie.setHttpOnly(false);
+            acessCookie.setPath("/");
+            response.addCookie(acessCookie);
 
             JSONObject jsonObject = new JSONObject(resultMap);
             try (PrintWriter printWriter = response.getWriter()) {
                 printWriter.println(jsonObject);
                 printWriter.close();
             }
-
         } catch (Exception e) {
             throw new DevException(e);
         }

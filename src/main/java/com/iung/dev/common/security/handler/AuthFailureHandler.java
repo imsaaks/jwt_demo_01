@@ -32,18 +32,31 @@ public class AuthFailureHandler implements AuthenticationFailureHandler {
     @Override
     public 	void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
                                            AuthenticationException exception) throws IOException {
-        // 토큰 삭제
-        TokenUtils.deleteToken(response);
 
         response.setCharacterEncoding(StandardCharsets.UTF_8.name());
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 
+        String errorCode = exception.getMessage();
+        String failMessage = "아이디 또는 비밀번호가 올바르지 않습니다. 입력한 정보를 다시 확인해 주세요.";
+
+        if (errorCode.equals(AccessPreventionCodes.USE_YN_N_CODE.getCode())) {
+            failMessage = "사용이 불가능한 계정입니다.";
+        } else if (errorCode.equals(AccessPreventionCodes.DELETE_YN_Y_CODE.getCode())) {
+            failMessage = "삭제된 계정입니다.";
+        } else if (errorCode.equals(AccessPreventionCodes.WITHDRAW_YN_Y_CODE.getCode())) {
+            failMessage = "탈퇴된 계정입니다.";
+        } else if (errorCode.equals(AccessPreventionCodes.LOCK_YN_Y_CODE.getCode())) {
+            failMessage = "잠금된 계정입니다.";
+        }
+        // 토큰 삭제
+        TokenUtils.deleteToken(response);
+
         try (PrintWriter printWriter = response.getWriter()) {
             HashMap<String, Object> resultMap = new HashMap<>();
             resultMap.put("userInfo", null);
             resultMap.put("resultCode", AccessPreventionCodes.ID_PWD_NOT_MATCH_CODE.getCode());
-            resultMap.put("failMessage", "아이디 또는 비밀번호가 올바르지 않습니다. 입력한 정보를 다시 확인해 주세요.");
+            resultMap.put("failMessage", failMessage);
             printWriter.println(new JSONObject(resultMap));
             printWriter.close();
         }

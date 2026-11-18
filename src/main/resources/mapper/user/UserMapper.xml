@@ -122,10 +122,15 @@
     <update id="incrementFailedCount" parameterType="string">
         UPDATE T_MEMBER_MST
         SET FAILED_COUNT = FAILED_COUNT + 1,
-        LOCK_YN = CASE WHEN FAILED_COUNT + 1 >= 5 THEN 'Y' ELSE LOCK_YN END
+        LOCK_YN = CASE WHEN FAILED_COUNT >= 5 THEN 'Y' ELSE LOCK_YN END
         WHERE LOWER(MEMBER_ID) = LOWER(#{memberId})
     </update>
 
+    <update id="resetFailedCount" parameterType="string">
+        UPDATE T_MEMBER_MST
+        SET FAILED_COUNT = 0
+        WHERE LOWER(MEMBER_ID) = LOWER(#{memberId})
+    </update>
 
     <select id="findPwd" parameterType="string" resultType="string">
         SELECT MEMBER_PW

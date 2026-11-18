@@ -71,9 +71,9 @@ public class CommonUtils {
     }
 
     public static boolean memberModifyDtoValidation(ModifyUserDto userDto) {
-        if (userDto.getUsername() == null || userDto.getUsername().isEmpty() ) {
-            throw new BadRequestException("Member 이름 이 null 또는 빈문자열 입니다.");
-        }
+//        if (userDto.getUsername() == null || userDto.getUsername().isEmpty() ) {
+//            throw new BadRequestException("Member 이름 이 null 또는 빈문자열 입니다.");
+//        }
         if (userDto.getEmail() != null && !userDto.getEmail().isEmpty()) {
             if (!userDto.getEmail().matches(AppConstants.EMAIL_REGEX)) {
                 throw new BadRequestException("Member 이메일 형식이 올바르지 않습니다.");
