@@ -2,6 +2,8 @@ package com.iung.dev.domain.user.controller;
 
 import com.iung.dev.common.constants.AppConstants;
 import com.iung.dev.common.model.LoginDto;
+import com.iung.dev.common.enumerate.TokenState;
+import com.iung.dev.domain.user.model.RegistUserDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -36,6 +38,7 @@ public class AuthController {
     @Operation(summary = "토큰 유효성 검사")
     @GetMapping("/check/token")
     public ResponseEntity<?> checkToken(@CookieValue(AppConstants.ACCESS_TOKEN) String accessToken) {
+        RegistUserDto registUserDto = new RegistUserDto();
 
         return ResponseEntity.ok().build();
     }

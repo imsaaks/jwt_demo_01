@@ -39,14 +39,14 @@ public class AuthUserService implements UserDetailsService {
         return userMapper.findPwd(memberId);
     }
 
-    private static SecurityUserDetailsDto getSecurityUserDetailsDto(UserDto user) {
-        List<SimpleGrantedAuthority> authorities = new ArrayList<>();
 
-        return new SecurityUserDetailsDto(user, authorities);
+    @Transactional
+    public int incrementFailedCount(String memberId) {
+        return userMapper.incrementFailedCount(memberId);
     }
 
-
-
-
-
+    private static SecurityUserDetailsDto getSecurityUserDetailsDto(UserDto user) {
+        List<SimpleGrantedAuthority> authorities = new ArrayList<>();
+        return new SecurityUserDetailsDto(user, authorities);
+    }
 }

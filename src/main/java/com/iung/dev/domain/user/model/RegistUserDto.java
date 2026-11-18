@@ -8,6 +8,7 @@ import lombok.*;
 @SuperBuilder
 @Getter
 @Setter
+@NoArgsConstructor
 @Schema(description = "사용자등록")
 public class RegistUserDto extends BaseDto {
     @Parameter(description = "Member 아이디")

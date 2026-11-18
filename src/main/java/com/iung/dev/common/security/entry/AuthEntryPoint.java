@@ -18,7 +18,7 @@ import java.util.*;
 
 @Component
 public class AuthEntryPoint implements AuthenticationEntryPoint {
-    //
+    // 401
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException {
 
@@ -30,7 +30,7 @@ public class AuthEntryPoint implements AuthenticationEntryPoint {
             HashMap<String, Object> resultMap = new HashMap<>();
             resultMap.put("userInfo", null);
             resultMap.put("resultCode", 9999);
-            resultMap.put("failMessage", "Authentication failed: " + authException.getMessage());
+            resultMap.put("failMessage", "인증실패 : " + authException.getMessage());
             writer.print(new JSONObject(resultMap));
             writer.flush();
             writer.close();

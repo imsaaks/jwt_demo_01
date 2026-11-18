@@ -1,6 +1,7 @@
 package com.iung.dev.common.utils;
 
 import com.iung.dev.common.constants.AppConstants;
+import com.iung.dev.common.enumerate.TokenState;
 import com.iung.dev.domain.user.model.UserDto;
 
 import io.jsonwebtoken.*;
@@ -57,29 +58,39 @@ public class TokenUtils {
     }
 
     /**
-     * 토큰을 기반으로 사용자의 정보를 반환해주는 메서드
+     * 토큰 유효성 검증 Booleam
      */
     public static boolean validateToken(String token) {
         try {
             Claims claims = getClaimsFormToken(token);
-
-            log.debug("expireTime : {}", claims.getExpiration());
             log.debug("loginId : {}", claims.get(LOGIN_ID));
-            log.debug("username : {}", claims.get(USERNAME));
-            log.debug("roles : {}", claims.get(ROLES));
-            // log.debug("permissions : {}", claims.get(PERMISSIONS));
             return true;
         } catch (ExpiredJwtException expiredJwtException) {
-            log.error("Token Expired", expiredJwtException);
             return false;
         } catch (JwtException jwtException) {
-            log.error("Token Tampered", jwtException);
             return false;
         } catch (NullPointerException npe) {
-            log.error("Token is null", npe);
             return false;
         }
     }
+
+    /**
+     * 토큰 유효성 검증 TokenState
+     */
+    public static TokenState getTokenState(String token) {
+        try {
+            Claims claims = getClaimsFormToken(token);
+            log.debug("loginId : {}", claims.get(LOGIN_ID));
+            return TokenState.NORMAL;
+        } catch (ExpiredJwtException expiredJwtException) {
+            return TokenState.EXPIRED;
+        } catch (JwtException jwtException) {
+            return TokenState.TAMPERED;
+        } catch (NullPointerException npe) {
+            return TokenState.TOKEN_EMPTY;
+        }
+    }
+
 
     public static String getTokenFromCookie(HttpServletRequest request) {
         Cookie[] cookies = request.getCookies();

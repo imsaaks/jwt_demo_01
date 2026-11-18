@@ -13,6 +13,7 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -26,21 +27,29 @@ public class AuthProvider implements AuthenticationProvider {
         AuthenticationToken token = (AuthenticationToken) authentication;
         String userId = token.getName();
         String userPassword = (String)token.getCredentials();
-        log.debug("userId: {}, userPassword: {}", userId, userPassword);
+        log.info("userId: {}, userPassword: {}", userId, userPassword);
 
         if (StringUtils.isBlank(userId) || StringUtils.isBlank(userPassword)) {
+            log.info("========A login fail!");
             throw new BadCredentialsException("Invalid username or password");
         }
         SecurityUserDetailsDto securityUserDetailsDto = (SecurityUserDetailsDto) userDetailsService.loadUserByUsername(userId);
         UserDto userDto = securityUserDetailsDto.getUserDto();
-        String pswd = userDetailsService.loadUserPwd(userDto.getMemberPw());
-        if (StringUtils.isBlank(userPassword) || !userPassword.equals(pswd)) {
+
+
+        String pswd = userDetailsService.loadUserPwd(userDto.getMemberId());
+        // log.info("pswd: {}", pswd);
+
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        boolean isMatch = encoder.matches(userPassword, pswd);
+        // log.info("isMatch: {}", isMatch);
+
+        if (StringUtils.isBlank(userPassword) || !isMatch) {
             // 로그인 실패시 로그인 실패 카운트 증감
-//            userDetailsService.addLoginFailCount(securityUserDetailsDto.getId());
+            userDetailsService.incrementFailedCount(securityUserDetailsDto.getUsername());
             log.info("login fail! : {}", securityUserDetailsDto.getUsername() + " Invalid password");
             throw new BadCredentialsException(securityUserDetailsDto.getUsername() + " Invalid password");
         }
-
         return new AuthenticationToken(securityUserDetailsDto, userPassword, securityUserDetailsDto.getAuthorities());
     }
 

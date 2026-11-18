@@ -30,8 +30,7 @@ public interface UserMapper {
 
 
 
-    /**
-     * AuthenticationProvider 에서 사용
-     */
     String findPwd(@Param("memberId") String memberId);
+
+    int updatePwd(@Param("memberId") String memberId, @Param("memberPw") String memberPw);
 }

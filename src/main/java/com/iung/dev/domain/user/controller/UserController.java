@@ -1,9 +1,9 @@
 package com.iung.dev.domain.user.controller;
 
 import com.iung.dev.common.constants.AppConstants;
-//import com.iung.dev.common.model.LoginDto;
 import com.iung.dev.domain.user.model.RegistUserDto;
 import com.iung.dev.domain.user.model.SearchUserDto;
+import com.iung.dev.domain.user.model.ModifyPwdDto;
 import com.iung.dev.domain.user.model.ModifyUserDto;
 import com.iung.dev.domain.user.model.UserDto;
 import com.iung.dev.domain.user.model.UserIdCheckDto;
@@ -31,7 +31,6 @@ public class UserController {
 
     private final UserService userService;
 
-
     @Operation(summary = "아이디 중복 체크")
     @PostMapping("/checkId")
     public ResponseEntity<?> checkIdDuplicate(@RequestBody UserIdCheckDto userIdCheckDto) {
@@ -44,19 +43,15 @@ public class UserController {
         return ResponseEntity.ok(userService.register(userDto));
     }
 
-
     @Operation(summary = "회원(본인)정보 조회")
     @GetMapping("/me")
-    public ResponseEntity<?> findMe(@CookieValue(AppConstants.ACCESS_TOKEN) Cookie coookie) {
-
-        return ResponseEntity.ok().build();
+    public ResponseEntity<?> findMe(@CookieValue(AppConstants.ACCESS_TOKEN) Cookie cookie) {
+        return ResponseEntity.ok(userService.findMe(cookie));
     }
-
-
+    
     @Operation(summary = "회원정보 조회(단건)")
     @GetMapping("/find/{memberId}")
     public ResponseEntity<?> find(@PathVariable String memberId) {
-
         return ResponseEntity.ok(userService.findUser(memberId));
     }
 
@@ -66,12 +61,11 @@ public class UserController {
         return ResponseEntity.ok(userService.search(searchUserDto));
     }
 
-
-
     @Operation(summary = "회원(본인)정보 수정")
     @PutMapping("/me")
-    public ResponseEntity<?> updateMe(@RequestBody UserDto userDto, @CookieValue(AppConstants.ACCESS_TOKEN) Cookie coookie) {
-        return ResponseEntity.ok().build();
+    public ResponseEntity<?> updateMe(@CookieValue(AppConstants.ACCESS_TOKEN) Cookie coookie,
+                                      @RequestBody ModifyUserDto userDto) {
+        return ResponseEntity.ok(userService.updateMe(coookie, userDto));
     }
 
     @Operation(summary = "회원 정보 수정")
@@ -82,16 +76,8 @@ public class UserController {
 
     @Operation(summary = "회원(본인)비밀번호 수정")
     @PutMapping("/me/password")
-    public ResponseEntity<?> updateMePassword(@RequestBody UserDto userDto, @CookieValue(AppConstants.ACCESS_TOKEN) Cookie coookie) {
-        return ResponseEntity.ok().build();
+    public ResponseEntity<?> updateMePassword(@CookieValue(AppConstants.ACCESS_TOKEN) Cookie coookie,
+                                              @RequestBody ModifyPwdDto userDto) {
+        return ResponseEntity.ok(userService.updateMePassword(coookie, userDto));
     }
-
-
-
-    @Operation(summary = "회원 비밀번호 수정")
-    @PutMapping("/update/password/{memberId}")
-    public ResponseEntity<?> updatePassword(@RequestBody UserDto userDto) {
-        return ResponseEntity.ok().build();
-    }
-
 }

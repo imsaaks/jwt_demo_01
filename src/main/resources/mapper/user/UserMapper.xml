@@ -129,4 +129,11 @@
         FROM T_MEMBER_MST
         WHERE LOWER(MEMBER_ID) = LOWER(#{memberId})
     </select>
+    
+    
+    <update id="updatePwd" parameterType="string">
+        UPDATE T_MEMBER_MST
+        SET MEMBER_PW = #{memberPw}
+        WHERE LOWER(MEMBER_ID) = LOWER(#{memberId})
+    </update>
 </mapper>

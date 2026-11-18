@@ -27,14 +27,14 @@ public class TokenInterceptor implements HandlerInterceptor {
             if (TokenUtils.validateToken(token)) {
                 String userId = TokenUtils.getUserLoginIdFromToken(token);
                 if (userId == null || userId.isEmpty()) {
-                    throw new AuthenticationException(GlobalErrorCodes.AUTH_ERROR_CODE, "Token에 필수정보가 없습니다.");
+                    throw new AuthenticationException(GlobalErrorCodes.AUTH_ERROR_CODE, "인증 토큰에 필수정보가 없습니다.");
                 }
                 return true;
             } else {
-                throw new AuthenticationException(GlobalErrorCodes.INVALID_TOKEN_CODE, "유효하지 않은 Token 입니다.");
+                throw new AuthenticationException(GlobalErrorCodes.INVALID_TOKEN_CODE, "인증 토큰이 유효하지 않습니다.");
             }
         } else {
-            throw new AuthenticationException(GlobalErrorCodes.AUTH_ERROR_CODE, "Token이 필요합니다.");
+            throw new AuthenticationException(GlobalErrorCodes.AUTH_ERROR_CODE, "인증 토큰이 필요합니다.");
         }
     }
 

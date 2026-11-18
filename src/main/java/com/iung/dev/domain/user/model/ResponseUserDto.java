@@ -1,10 +1,8 @@
-package com.iung.dev.common.model;
-
+package com.iung.dev.domain.user.model;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.SuperBuilder;
 
 @Getter
 @Setter

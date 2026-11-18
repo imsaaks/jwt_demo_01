@@ -62,7 +62,7 @@ public class AuthorizationFilter extends OncePerRequestFilter {
         if (StringUtils.isBlank(token)) {
             if (!AppConstants.SIGN_IN_PATH.equals(requestUri) && !AppConstants.SIGN_UP_PATH.equals(requestUri)
                     && !AppConstants.CHECK_ID_DUPLICATE_PATH.equals(requestUri)  && !AppConstants.SIGN_OUT_PATH.equals(requestUri)) {
-                throw new com.iung.dev.common.exception.AuthenticationException(GlobalErrorCodes.AUTH_ERROR_CODE, "Token이 필요합니다.");
+                throw new com.iung.dev.common.exception.AuthenticationException(GlobalErrorCodes.AUTH_ERROR_CODE, "인증 토큰이 필요합니다.");
             }
         }
         try {

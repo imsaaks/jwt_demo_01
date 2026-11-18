@@ -16,7 +16,7 @@ import java.util.HashMap;
 
 @Component
 public class AuthDeniedHandler implements AccessDeniedHandler {
-    //  // HTTP 403 Forbidden
+    // HTTP 403 Forbidden
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException)
             throws IOException {
@@ -29,7 +29,7 @@ public class AuthDeniedHandler implements AccessDeniedHandler {
             HashMap<String, Object> resultMap = new HashMap<>();
             resultMap.put("userInfo", null);
             resultMap.put("resultCode", 9999);
-            resultMap.put("failMessage", "접근 권한이 없습니다");
+            resultMap.put("failMessage", "접근 권한이 없습니다.");
             writer.print(new JSONObject(resultMap));
             writer.flush();
             writer.close();

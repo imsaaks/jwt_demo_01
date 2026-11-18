@@ -40,7 +40,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
                 // ObjectMapper objectMapper = GlobalObjectMapper.getDefaultMapper();
                 ObjectMapper objectMapper = new ObjectMapper();
                 LoginDto login = objectMapper.readValue(request.getInputStream(), LoginDto.class);
-                log.debug("1.CustomAuthenticationFilter :: loginId: {}, userPw: {}", login.getMemberId(), login.getMemberPw());
+//                log.debug("1.CustomAuthenticationFilter :: loginId: {}, userPw: {}", login.getMemberId(), login.getMemberPw());
                 return new AuthenticationToken(login.getMemberId(), login.getMemberPw());
             }else{
                 throw new com.iung.dev.common.exception.AuthenticationException(GlobalErrorCodes.BAD_REQUEST_CODE, "Authentication method not supported: " + request.getMethod());
