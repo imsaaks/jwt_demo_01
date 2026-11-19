@@ -5,6 +5,7 @@ import com.iung.dev.common.config.SecurityConfig;
 import com.iung.dev.common.security.service.AuthUserService;
 import com.iung.dev.common.security.model.SecurityUserDto;
 import com.iung.dev.common.exception.code.GlobalErrorCodes;
+import com.iung.dev.common.utils.CommonUtils;
 import com.iung.dev.common.utils.TokenUtils;
 
 import io.jsonwebtoken.ExpiredJwtException;
@@ -62,11 +63,11 @@ public class AuthorizationFilter extends OncePerRequestFilter {
         if (StringUtils.isBlank(token)) {
             if (!AppConstants.SIGN_IN_PATH.equals(requestUri) && !AppConstants.SIGN_UP_PATH.equals(requestUri)
                     && !AppConstants.CHECK_ID_DUPLICATE_PATH.equals(requestUri)  && !AppConstants.SIGN_OUT_PATH.equals(requestUri)) {
-                throw new com.iung.dev.common.exception.AuthenticationException(GlobalErrorCodes.AUTH_ERROR_CODE, "인증 토큰이 필요합니다.");
+                throw new com.iung.dev.common.exception.AuthenticationException(GlobalErrorCodes.AUTH_ERROR_CODE, "인증 토큰 에러입니다.");
             }
         }
         try {
-            validateAndSetAuthentication(token);
+            validateAndSetAuthentication(response, token);
             filterChain.doFilter(request, response);
         } catch (Exception e) {
             handleException(response, e);
@@ -108,7 +109,7 @@ public class AuthorizationFilter extends OncePerRequestFilter {
     }
 
 
-    private void validateAndSetAuthentication(String token) {
+    private void validateAndSetAuthentication(HttpServletResponse response, String token) {
         log.debug("validateAndSetAuthentication 시작: {}", token); // 로그 추가
 
         if (TokenUtils.validateToken(token)) {
@@ -123,7 +124,7 @@ public class AuthorizationFilter extends OncePerRequestFilter {
                     new AuthenticationToken(securityUserDto, userName, grantedAuthorities);
             SecurityContextHolder.getContext().setAuthentication(authentication);
         } else {
-            throw new com.iung.dev.common.exception.AuthenticationException(GlobalErrorCodes.INVALID_TOKEN_CODE, "유효하지 않은 Token 입니다.");
+            throw new com.iung.dev.common.exception.AuthenticationException(GlobalErrorCodes.INVALID_TOKEN_CODE, "인증 토큰 에러입니다.");
         }
     }
 
@@ -132,13 +133,13 @@ public class AuthorizationFilter extends OncePerRequestFilter {
 
 
         if (e instanceof ExpiredJwtException) {
-            resultMessage = "토큰 기간 만료";
+            resultMessage = "인증 토큰 기간 만료";
         } else if (e instanceof SecurityException) {
-            resultMessage = "허용된 토큰이 아닙니다.";
+            resultMessage = "허용된 인증 토큰이 아닙니다.";
         } else if (e instanceof JwtException) {
-            resultMessage = "토큰을 parsing 하던 중 예외가 발생했습니다.";
+            resultMessage = "인증 토큰을 parsing 하던 중 예외가 발생했습니다.";
         } else {
-            resultMessage = "토큰 에러입니다.";
+            resultMessage = "인증 토큰 에러입니다.";
         }
         Map<String, Object> jsonMap = new HashMap<>();
         jsonMap.put("status", 401);

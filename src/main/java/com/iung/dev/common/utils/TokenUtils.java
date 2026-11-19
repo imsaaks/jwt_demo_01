@@ -76,6 +76,8 @@ public class TokenUtils {
             return false;
         } catch (NullPointerException npe) {
             return false;
+        } catch (Exception e) {
+            return false;
         }
     }
 
@@ -92,6 +94,8 @@ public class TokenUtils {
         } catch (JwtException jwtException) {
             return TokenState.TAMPERED;
         } catch (NullPointerException npe) {
+            return TokenState.TOKEN_EMPTY;
+        } catch (Exception e) {
             return TokenState.TOKEN_EMPTY;
         }
     }

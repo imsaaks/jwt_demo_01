@@ -31,7 +31,7 @@ public class AuthDeniedHandler implements AccessDeniedHandler {
             HashMap<String, Object> resultMap = new HashMap<>();
             resultMap.put("userInfo", null);
             resultMap.put("resultCode", AccessPreventionCodes.DEFAULT_PREVENTION_CODE.getCode());
-            resultMap.put("failMessage", "접근 권한이 없습니다.");
+            resultMap.put("message", "접근 권한이 없습니다.");
             writer.print(new JSONObject(resultMap));
             writer.flush();
             writer.close();

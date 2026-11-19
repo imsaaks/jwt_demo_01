@@ -31,7 +31,7 @@ public class AuthEntryPoint implements AuthenticationEntryPoint {
             HashMap<String, Object> resultMap = new HashMap<>();
             resultMap.put("userInfo", null);
             resultMap.put("resultCode", AccessPreventionCodes.DEFAULT_PREVENTION_CODE.getCode());
-            resultMap.put("failMessage", "인증실패 : " + authException.getMessage());
+            resultMap.put("message", "인증실패 : " + authException.getMessage());
             writer.print(new JSONObject(resultMap));
             writer.flush();
             writer.close();

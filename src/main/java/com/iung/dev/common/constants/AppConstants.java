@@ -9,7 +9,7 @@ public class AppConstants {
     public static final String SIGN_OUT_PATH = "/api/v1/signout";
     public static final String SIGN_UP_PATH = "/api/v1/users/signup";
     public static final String CHECK_ID_DUPLICATE_PATH = "/api/v1/users/checkId";
-    public static final String TOKEN_CHECK_PATH = "/api/v1/users/checkToken";
+    public static final String TOKEN_CHECK_PATH = "/api/v1/check/token";
 
     public static final int MEMBER_ID_MIN_LENGTH = 5;
     public static final int MEMBER_ID_MAX_LENGTH = 12;

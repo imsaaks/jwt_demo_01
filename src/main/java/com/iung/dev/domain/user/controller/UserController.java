@@ -11,6 +11,7 @@ import com.iung.dev.domain.user.service.UserService;
 
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.Cookie;
 import lombok.RequiredArgsConstructor;
@@ -45,7 +46,7 @@ public class UserController {
 
     @Operation(summary = "회원(본인)정보 조회")
     @GetMapping("/me")
-    public ResponseEntity<?> findMe(@CookieValue(AppConstants.ACCESS_TOKEN) Cookie cookie) {
+    public ResponseEntity<?> findMe(@Parameter(hidden = true) @CookieValue(value = AppConstants.ACCESS_TOKEN) Cookie cookie) {
         return ResponseEntity.ok(userService.findMe(cookie));
     }
     
@@ -63,9 +64,9 @@ public class UserController {
 
     @Operation(summary = "회원(본인)정보 수정")
     @PutMapping("/me")
-    public ResponseEntity<?> updateMe(@CookieValue(AppConstants.ACCESS_TOKEN) Cookie coookie,
+    public ResponseEntity<?> updateMe(@Parameter(hidden = true) @CookieValue(value = AppConstants.ACCESS_TOKEN) Cookie cookie,
                                       @RequestBody ModifyUserDto userDto) {
-        return ResponseEntity.ok(userService.updateMe(coookie, userDto));
+        return ResponseEntity.ok(userService.updateMe(cookie, userDto));
     }
 
     @Operation(summary = "회원 정보 수정")
@@ -76,8 +77,8 @@ public class UserController {
 
     @Operation(summary = "회원(본인)비밀번호 수정")
     @PutMapping("/me/password")
-    public ResponseEntity<?> updateMePassword(@CookieValue(AppConstants.ACCESS_TOKEN) Cookie coookie,
+    public ResponseEntity<?> updateMePassword(@Parameter(hidden = true) @CookieValue(value = AppConstants.ACCESS_TOKEN) Cookie cookie,
                                               @RequestBody ModifyPwdDto userDto) {
-        return ResponseEntity.ok(userService.updateMePassword(coookie, userDto));
+        return ResponseEntity.ok(userService.updateMePassword(cookie, userDto));
     }
 }

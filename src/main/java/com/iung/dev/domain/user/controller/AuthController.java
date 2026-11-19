@@ -5,7 +5,11 @@ import com.iung.dev.common.model.LoginDto;
 import com.iung.dev.common.enumerate.TokenState;
 import com.iung.dev.common.utils.TokenUtils;
 import com.iung.dev.domain.user.model.RegistUserDto;
+import com.iung.dev.domain.user.model.ResponseStateDto;
 
+import com.iung.dev.domain.user.service.UserService;
+import io.swagger.v3.oas.annotations.Parameter;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -28,6 +32,8 @@ import java.util.HashMap;
 @Tag(name = "sign In / sign Out", description = "로그인/로그아웃/토큰체크 API")
 public class AuthController {
 
+    private final UserService userService;
+
     @Operation(summary = "로그인")
     @PostMapping("/signin")
     public ResponseEntity<?> signIn(@RequestBody LoginDto loginDto) {
@@ -45,12 +51,31 @@ public class AuthController {
         return ResponseEntity.ok(result);
     }
 
+    /**
+     *
+     * @param cookie
+     * @return
+     * Frontend 에서 guard 또는 loader 사용할 때 호출
+     */
     @Operation(summary = "토큰 유효성 검사")
     @GetMapping("/check/token")
-    public ResponseEntity<?> checkToken(@CookieValue(AppConstants.ACCESS_TOKEN) String accessToken) {
-        RegistUserDto registUserDto = new RegistUserDto();
-
-        return ResponseEntity.ok().build();
+    public ResponseEntity<?> checkToken(@Parameter(hidden = true) @CookieValue(value = AppConstants.ACCESS_TOKEN) Cookie cookie) {
+        ResponseStateDto responseStateDto = new ResponseStateDto();
+        if (cookie != null) {
+            String token = cookie.getValue();
+            TokenState state = TokenUtils.getTokenState(token);
+            responseStateDto.setState(state.getCode());
+            responseStateDto.setUserInfo(null);
+            if (state == TokenState.NORMAL) {
+                String memberId = TokenUtils.getUserLoginIdFromToken(token);
+                if (memberId != null) {
+                    responseStateDto.setUserInfo(userService.findUser(memberId));
+                }
+            }
+        } else {
+            responseStateDto.setUserInfo(null);
+            responseStateDto.setState(TokenState.TOKEN_EMPTY.getCode());
+        }
+        return ResponseEntity.ok(responseStateDto);
     }
-
 }

@@ -50,7 +50,7 @@ public class AuthSuccessHandler extends SavedRequestAwareAuthenticationSuccessHa
             response.setStatus(HttpServletResponse.SC_OK);
             resultMap.put("userInfo", userDtoObject);
             resultMap.put("resultCode", AccessPreventionCodes.OK_CODE.getCode());
-            resultMap.put("failMessage", null);
+            resultMap.put("message", null);
 
             // 토큰 생성
             String acessToken = TokenUtils.generateToken(userDto);
