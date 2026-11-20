@@ -122,7 +122,7 @@
     <update id="incrementFailedCount" parameterType="string">
         UPDATE T_MEMBER_MST
         SET FAILED_COUNT = FAILED_COUNT + 1,
-        LOCK_YN = CASE WHEN FAILED_COUNT >= 5 THEN 'Y' ELSE LOCK_YN END
+        LOCK_YN = CASE WHEN FAILED_COUNT >= #{limit} THEN 'Y' ELSE LOCK_YN END
         WHERE LOWER(MEMBER_ID) = LOWER(#{memberId})
     </update>
 

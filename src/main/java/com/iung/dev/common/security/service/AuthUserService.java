@@ -1,5 +1,6 @@
 package com.iung.dev.common.security.service;
 
+import com.iung.dev.common.constants.AppConstants;
 import com.iung.dev.common.security.model.SecurityUserDto;
 import com.iung.dev.common.security.exception.AccessPreventionCodes;
 import com.iung.dev.domain.user.mapper.UserMapper;
@@ -43,7 +44,7 @@ public class AuthUserService implements UserDetailsService {
 
     @Transactional
     public int incrementFailedCount(String memberId) {
-        return userMapper.incrementFailedCount(memberId);
+        return userMapper.incrementFailedCount(memberId, Integer.toString(AppConstants.PWD_FAILURE_LOCK_LIMIT));
     }
 
 

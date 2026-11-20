@@ -10,11 +10,10 @@ public class AppConstants {
     public static final String SIGN_UP_PATH = "/api/v1/users/signup";
     public static final String CHECK_ID_DUPLICATE_PATH = "/api/v1/users/checkId";
     public static final String TOKEN_CHECK_PATH = "/api/v1/check/token";
-
-    public static final int MEMBER_ID_MIN_LENGTH = 5;
-    public static final int MEMBER_ID_MAX_LENGTH = 12;
-    public static final int MEMBER_PW_MIN_LENGTH = 8;
-    public static final int MEMBER_PW_MAX_LENGTH = 15;
+//    public static final int MEMBER_ID_MIN_LENGTH = 5;
+//    public static final int MEMBER_ID_MAX_LENGTH = 12;
+//    public static final int MEMBER_PW_MIN_LENGTH = 8;
+//    public static final int MEMBER_PW_MAX_LENGTH = 15;
 
     // "^[a-zA-Z0-9]*$";  // 알파벳과 숫자만 허용
     // ^[a-zA-Z][a-zA-Z0-9_@]{4,11}$  알파벳으로 시작하며 5~12자의 알파벳, 숫자, 밑줄(_), @만 가능
@@ -28,6 +27,7 @@ public class AppConstants {
 
     public static final int TOKEN_EXPIRATION_HOUR = 1;
 
-
+    // 비밀번호 ??회 실패시 LOCK_YN -> Y
+    public static final int PWD_FAILURE_LOCK_LIMIT = 10;
 
 }

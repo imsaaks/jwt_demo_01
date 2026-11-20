@@ -26,7 +26,7 @@ public interface UserMapper {
 
     int updatePwd(@Param("user") UserDto user);
 
-    int incrementFailedCount(@Param("memberId") String memberId);
+    int incrementFailedCount(@Param("memberId") String memberId, @Param("limit") String limit);
 
     int resetFailedCount(@Param("memberId") String memberId);
 
