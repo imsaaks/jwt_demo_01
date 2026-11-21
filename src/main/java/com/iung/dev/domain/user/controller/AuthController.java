@@ -37,7 +37,6 @@ public class AuthController {
     @Operation(summary = "로그인")
     @PostMapping("/signin")
     public ResponseEntity<?> signIn(@RequestBody LoginDto loginDto) {
-        log.info("로그인 시도 {}", loginDto.getMemberId());
         return ResponseEntity.ok().build();
     }
 
